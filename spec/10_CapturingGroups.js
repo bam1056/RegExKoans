@@ -54,11 +54,11 @@ describe("Capturing Groups", function() {
     //   * The id will be the only attribute inside the div tag
     //   * Only double-quote will be used (")
 
-    var fixThisPattern = /^<div\sid="(\w*)">$/;
+    var fixThisPattern = /^.*"([\w]+)">/;
 
     var matches = fixThisPattern.exec( '<div id="anArbitraryId"> Here is my text node! </div>' );
 
-    expect( matches[0] ).toEqual("anArbitraryId");
+    expect( matches[1] ).toEqual("anArbitraryId");
 
   });
 
@@ -85,15 +85,15 @@ describe("Capturing Groups", function() {
     //   * Only double-quote will be used (")
     //   * The class attribute is guaranteed to exist
 
-    var fixThisPattern = /^___$/;
+    var fixThisPattern = /^.*class="([\w\s.]+)"/;
 
     var matches1 = fixThisPattern.exec( '<div id="someId" class="boxed"> Some text here </div>' );
     var matches2 = fixThisPattern.exec( '<span class="bold red"> Error! </span>'                );
     var matches3 = fixThisPattern.exec( '<img src="image.jpg" class="framed" id="myPortrait"/>' );
 
-    expect( matches1[___] ).toEqual("boxed");
-    expect( matches2[___] ).toEqual("bold red");
-    expect( matches3[___] ).toEqual("framed");
+    expect( matches1[1] ).toEqual("boxed");
+    expect( matches2[1] ).toEqual("bold red");
+    expect( matches3[1] ).toEqual("framed");
   });
 
   it('Captured groups can be referenced within the pattern itself using backslash-n', function() {
@@ -103,7 +103,7 @@ describe("Capturing Groups", function() {
 
     var thisPatternWorks = /^([a-z]+)\d+\1$/;
 
-    var fixThisPattern = /^___$/;
+    var fixThisPattern = /^([\W\D\S])([\w]*[\s]*)+\1$/;
 
     expect( 'ab12345ab' ).toMatch(thisPatternWorks);
     expect( 'a12345x'   ).not.toMatch(thisPatternWorks);
@@ -121,15 +121,15 @@ describe("Capturing Groups", function() {
     //   The attribute will never use a mismatch, like class="one'
 
 
-    var fixThisPattern = /^___$/;
+    var fixThisPattern = /^.*class=(["|'])([\w\s.]+)\1/;
 
     var matches1 = fixThisPattern.exec( '<div id="someId" class="boxed"> Some text here </div>'   );
     var matches2 = fixThisPattern.exec( "<span class='bold red'> Error! </span>"                  );
     var matches3 = fixThisPattern.exec( '<img src="image.jpg" class=\'framed\' id="myPortrait"/>' );
 
-    expect( matches1[___] ).toEqual('boxed');
-    expect( matches2[___] ).toEqual('bold red');
-    expect( matches3[___] ).toEqual('framed');
+    expect( matches1[2] ).toEqual('boxed');
+    expect( matches2[2] ).toEqual('bold red');
+    expect( matches3[2] ).toEqual('framed');
   });
 
 });
